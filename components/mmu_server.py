@@ -2240,25 +2240,25 @@ def parse_gcode_file(file_path):
             if len(filament_names) == n:
                 filament_names = [filament_names[i] for i in keep]
 
-        # Rebuild the purge volumes list to drop the virtual slots, keeping its
-        # shape consistent with the reduced tool count so MMU_SLICER_TOOL_MAP can
-        # parse it (it accepts 1, N, 2N or N*N values).
-        pv = purge_volumes
-        if pv:
-            n_pv = len(pv)
-            if n_pv == 1:
-                pass  # single value; unchanged
-            elif n_pv == n:
-                purge_volumes = [pv[i] for i in keep]
-            elif n_pv == n * 2:
-                purge_volumes = [pv[i] for i in keep] + [pv[n + i] for i in keep]
-            elif n_pv == n * n:
-                M = len(keep)
-                purge_volumes = [
-                    pv[keep[y] + keep[x] * n]
-                    for x in range(M) for y in range(M)
-                ]
-            # Unknown shape: leave unchanged; MMU will report its own error.
+            # Rebuild the purge volumes list to drop the virtual slots, keeping its
+            # shape consistent with the reduced tool count so MMU_SLICER_TOOL_MAP can
+            # parse it (it accepts 1, N, 2N or N*N values).
+            pv = purge_volumes
+            if pv:
+                n_pv = len(pv)
+                if n_pv == 1:
+                    pass  # single value; unchanged
+                elif n_pv == n:
+                    purge_volumes = [pv[i] for i in keep]
+                elif n_pv == n * 2:
+                    purge_volumes = [pv[i] for i in keep] + [pv[n + i] for i in keep]
+                elif n_pv == n * n:
+                    M = len(keep)
+                    purge_volumes = [
+                        pv[keep[y] + keep[x] * n]
+                        for x in range(M) for y in range(M)
+                    ]
+                # Unknown shape: leave unchanged; MMU will report its own error.
 
     return (has_tools_placeholder or has_total_toolchanges or has_colors_placeholder or has_temps_placeholder or has_materials_placeholder or has_purge_volumes_placeholder or filament_names_placeholder,
             sorted(tools_used), total_toolchanges, colors, temps, materials, purge_volumes, filament_names, slicer)
